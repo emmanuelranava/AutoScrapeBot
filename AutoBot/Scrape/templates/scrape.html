@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scraping</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Styles pour le spinner */
+        .spinner-border {
+            display: none; /* Masqué par défaut */
+            margin-left: 10px;
+        }
+
+        /* Désactiver le bouton lorsqu'il est en chargement */
+        .loading {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        .scraping-message {
+            display: none;
+            color: #3498db;
+            margin-top: 10px;
+        }
+
+        /* Couleurs et design */
+        body {
+            background-color: #977392;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 50px auto;
+        }
+        h1 {
+            color: #3498db;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        label {
+            color: #333;
+        }
+        .btn-custom {
+            background-color: #3498db;
+            color: white;
+        }
+        .btn-custom:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1><i class="fas fa-search"></i> Outil de Scraping</h1>
+    <form method="post" id="scrapingForm">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="url_input">Entrez une ou plusieurs URL (séparées par des virgules) :</label>
+            <input type="text" id="url_input" name="url_input" class="form-control" placeholder="Exemple : https://example.com, https://example2.com" required>
+        </div>
+        <div class="d-flex align-items-center">
+            <button type="submit" class="btn btn-custom" id="submitButton">
+                <i class="fas fa-rocket"></i> Démarrer le scraping
+            </button>
+            <!-- Spinner -->
+            <div class="spinner-border text-primary" id="loadingSpinner" role="status">
+                <span class="visually-hidden">Chargement...</span>
+            </div>
+        </div>
+    </form>
+
+    <!-- Message de statut de scraping -->
+    <p class="scraping-message" id="scrapingMessage"><i class="fas fa-spinner"></i> Scraping en cours...</p>
+
+    <!-- Affichage des messages de succès ou d'erreur -->
+    {% if warning %}
+        <p class="text-danger mt-3">{{ warning }}</p>
+    {% endif %}
+    
+    {% if success %}
+        <p class="text-success mt-3">{{ success }}</p>
+    {% endif %}
+</div>
+
+<!-- Bootstrap JS and Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Cible le formulaire et les éléments du DOM
+    const form = document.getElementById('scrapingForm');
+    const spinner = document.getElementById('loadingSpinner');
+    const submitButton = document.getElementById('submitButton');
+    const scrapingMessage = document.getElementById('scrapingMessage');
+
+    // Ajouter un événement pour afficher le spinner lors de la soumission du formulaire
+    form.addEventListener('submit', function() {
+        // Afficher le spinner et le message de scraping
+        spinner.style.display = 'inline-block';
+        scrapingMessage.style.display = 'block';
+
+        // Désactiver le bouton de soumission pendant le traitement
+        submitButton.classList.add('loading');
+    });
+</script>
+
+</body>
+</html>
